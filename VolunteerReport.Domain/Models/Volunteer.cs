@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VolunteerReport.Domain.Models.Interfaces;
+﻿using VolunteerReport.Domain.Models.Interfaces;
 
 namespace VolunteerReport.Domain.Models
 {
@@ -13,7 +8,7 @@ namespace VolunteerReport.Domain.Models
         public Guid UserId { get; set; }
         public User? User { get; set; }
         public string? Nickname { get; set; }
-        public string ShortInfo { get; set; }
+        public string? ShortInfo { get; set; }
         public DateTime? Modified { get; set; } = DateTime.UtcNow;
         public bool isBlocked { get; set; } = false;
         public bool isHidden { get; set; } = false;

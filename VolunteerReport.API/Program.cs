@@ -1,24 +1,20 @@
-using FluentValidation;
 using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
 using System.Text.Json.Serialization;
 using VolunteerReport.Common.Configuration;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
-using System.Text.Json.Serialization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using FluentValidation;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
-using Microsoft.OData.Edm;
-using Microsoft.OData.ModelBuilder;
-using Microsoft.AspNetCore.OData;
-using Microsoft.EntityFrameworkCore;
 using VolunteerReport.Domain;
 using VolunteerReport.Infrastructure.Services.Interfaces;
-using VolunteerReport.Infrastructure.Services;
+using EnRoute.Common.Configuration;
+using EnRoute.Infrastructure.Services.Interfaces;
+using EnRoute.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using EnRoute.Infrastructure.Strategies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,15 +29,50 @@ builder.Configuration
 AdminSettings adminSettings = builder.Configuration.GetSection("AdminSettings").Get<AdminSettings>() ??
                               throw new Exception("Admin configuration is missing");
 
+
+JwtSettings jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>() ??
+                          throw new Exception("JWT configuration is missing");
+
 builder.Services.AddSingleton(adminSettings);
+builder.Services.AddSingleton(jwtSettings);
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddSingleton<IJwtTokenService, JwtTokenService>();
+builder.Services.AddSingleton<IGoogleJwtTokenParser, GoogleJwtTokenParser>();
+builder.Services.AddScoped<IRoleStrategyFactory, RoleStrategyFactory>();
+
 
 builder.Services.AddHttpClient();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MsSql"),
         o => o.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(options =>
+    {
+        options.SaveToken = true;
+        options.RequireHttpsMetadata = false;
+
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ClockSkew = TimeSpan.Zero,
+
+            ValidAudience = jwtSettings.ValidAudience,
+            ValidIssuer = jwtSettings.ValidIssuer,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret))
+        };
+    });
 
 const string CORS_POLICY = "CorsPolicy";
 builder.Services.AddCors(options =>
@@ -75,7 +106,39 @@ builder.Services.AddFluentValidationAutoValidation();
 
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
+                      Enter 'Bearer' [space] and then your token in the text input below.
+                      \r\n\r\nExample: 'Bearer 12345abcdef'",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                },
+                Scheme = "oauth2",
+                Name = "Bearer",
+                In = ParameterLocation.Header
+
+            },
+            new List<string>()
+        }
+    });
+});
 
 //builder.Services.AddHostedService<AdminInitializerHostedService>();
 

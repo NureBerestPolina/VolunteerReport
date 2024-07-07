@@ -1,9 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using EnRoute.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using VolunteerReport.Domain.Models;
 
 namespace VolunteerReport.Domain
@@ -16,6 +12,7 @@ namespace VolunteerReport.Domain
 
         public DbSet<User> Users { get; set; }
         public DbSet<Volunteer> Volunteers { get; set; }
+        public DbSet<IssuedToken> IssuedTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -6,4 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Google.Apis.Auth" Version="1.68.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VolunteerReport.Common\VolunteerReport.Common.csproj" />
+    <ProjectReference Include="..\VolunteerReport.Domain\VolunteerReport.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
