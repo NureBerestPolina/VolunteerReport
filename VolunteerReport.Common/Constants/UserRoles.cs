@@ -10,8 +10,8 @@ namespace VolunteerReport.Common.Constants
     {
         public static readonly IEnumerable<string> AvailableRoles = new[] { Administrator, User, Volunteer };
 
-        public const string Administrator = "admin";
-        public const string User = "user";
-        public const string Volunteer = "volunteer";
+        public const string Administrator = nameof(Administrator);
+        public const string User = nameof(User);
+        public const string Volunteer = nameof(Volunteer);
     }
 }
