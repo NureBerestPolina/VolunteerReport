@@ -15,6 +15,7 @@ using EnRoute.Infrastructure.Services.Interfaces;
 using EnRoute.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using EnRoute.Infrastructure.Strategies;
+using VolunteerReport.Domain.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -169,7 +170,9 @@ app.Run();
 static IEdmModel GetEdmModel()
 {
     var builder = new ODataConventionModelBuilder();
-    // ...
+
+    builder.EntitySet<User>("Users").EntityType.Count().Filter().Expand().Select();
+    builder.EntitySet<Volunteer>("Volunteers").EntityType.Count().Filter().Expand().Select();
 
     builder.EnableLowerCamelCase();
     return builder.GetEdmModel();

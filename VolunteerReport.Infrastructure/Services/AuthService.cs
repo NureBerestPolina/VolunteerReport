@@ -47,6 +47,7 @@ namespace EnRoute.Infrastructure.Services
         {
             new(JwtClaims.Sub, user.Id.ToString()),
             new(JwtClaims.Email, user.Email!),
+            new(JwtClaims.AvatarUrl, user.AvatarUrl),
             new(JwtClaims.RegisterDate, user.RegisterDate.ToString("O")),
             new(JwtClaims.Name, user.Name)
         };
@@ -84,7 +85,8 @@ namespace EnRoute.Infrastructure.Services
             {
                 Email = command.Email,
                 Name = command.Name,
-                Role = command.Role
+                Role = command.Role,
+                AvatarUrl = command.AvatarUrl ?? string.Empty,
             };
 
             var isUserExists = await dbContext.Users.AnyAsync(u => u.Email == user.Email);

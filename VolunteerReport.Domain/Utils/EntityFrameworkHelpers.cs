@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VolunteerReport.Domain;
 using VolunteerReport.Domain.Models.Interfaces;
 
-namespace EnRoute.Domain.Utils
+namespace VolunteerReport.Domain.Utils
 {
     public static class EntityFrameworkHelpers
     {

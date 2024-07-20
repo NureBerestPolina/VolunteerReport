@@ -60,6 +60,7 @@ namespace EnRoute.API.Controllers
 
             var name = claims.Name;
             var email = claims.Email;
+            var photoUrl = claims.Picture;
 
             var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
 
@@ -69,6 +70,7 @@ namespace EnRoute.API.Controllers
                 {
                     Email = email,
                     Name = name,
+                    AvatarUrl = photoUrl,
                     Role = adminSettings.Emails.Any(e => e.Equals(email,StringComparison.InvariantCultureIgnoreCase)) ? 
                                 UserRoles.Administrator :
                                 UserRoles.User
