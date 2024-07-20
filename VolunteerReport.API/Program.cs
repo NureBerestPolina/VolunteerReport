@@ -16,6 +16,7 @@ using EnRoute.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using EnRoute.Infrastructure.Strategies;
 using VolunteerReport.Domain.Models;
+using VolunteerReport.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,7 @@ builder.Services.AddSingleton(adminSettings);
 builder.Services.AddSingleton(jwtSettings);
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IVolunteerService, VolunteerService>();
 builder.Services.AddSingleton<IJwtTokenService, JwtTokenService>();
 builder.Services.AddSingleton<IGoogleJwtTokenParser, GoogleJwtTokenParser>();
 builder.Services.AddScoped<IRoleStrategyFactory, RoleStrategyFactory>();

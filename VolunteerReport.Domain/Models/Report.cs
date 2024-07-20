@@ -13,5 +13,6 @@ namespace VolunteerReport.Domain.Models
         public DateTime Modified { get; set; } = DateTime.UtcNow;
         public bool IsDeleted { get; set; } = false;
         public string PhotoUrl { get; set; }
+        public List<ReportDetail> ReportDetails { get; set; } = new List<ReportDetail>();
     }
 }
