@@ -58,5 +58,40 @@ namespace VolunteerReport.Infrastructure.Services
 
             return volunteerProfiles;
         }
+
+        public async Task<VolunteerStatisticsProfile?> GetVolunteerStatisticsProfile(Guid volunteerId)
+        {
+            var volunteer = await applicationDbContext.Volunteers
+                .Include(v => v.User).FirstOrDefaultAsync(v => v.Id == volunteerId);
+
+            if (volunteer != null)
+            {
+                var reportsCount = await applicationDbContext.Reports
+                    .CountAsync(r => r.VolunteerId == volunteerId && !r.IsDeleted);
+
+                var totalCostUsd = await applicationDbContext.Reports
+                    .Where(r => r.VolunteerId == volunteerId && !r.IsDeleted)
+                    .SelectMany(r => r.ReportDetails)
+                    .SumAsync(rd => rd.CostUsd);
+
+                var volunteerStatisticsProfile = new VolunteerStatisticsProfile
+                {
+                    Id = volunteer.Id,
+                    UserId = volunteer.UserId,
+                    User = volunteer.User,
+                    Nickname = volunteer.Nickname,
+                    ShortInfo = volunteer.ShortInfo,
+                    Modified = volunteer.Modified,
+                    BankLink = volunteer.BankLink,
+                    HelpInfo = volunteer.HelpInfo,
+                    ReportsCount = reportsCount,
+                    TotalCostUsd = totalCostUsd
+                };
+
+                return volunteerStatisticsProfile;
+            }
+
+            return null;
+        }
     }
 }

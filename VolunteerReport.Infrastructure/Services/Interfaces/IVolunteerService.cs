@@ -12,5 +12,7 @@ namespace VolunteerReport.Infrastructure.Services.Interfaces
     public interface IVolunteerService
     {
         Task<IEnumerable<VolunteerProfile>> GetVolunteerProfiles();
+
+        Task<VolunteerStatisticsProfile?> GetVolunteerStatisticsProfile(Guid volunteerId);
     }
 }

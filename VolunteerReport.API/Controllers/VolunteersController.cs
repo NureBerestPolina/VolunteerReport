@@ -17,11 +17,22 @@ namespace VolunteerReport.API.Controllers
         }
 
         [HttpGet("VolunteerProfiles")]
-        public async Task<IActionResult> GetAdminStatistics()
+        public async Task<IActionResult> GetVolunteerProfiles()
         {
             var volunteerProfiles = await volunteerService.GetVolunteerProfiles();
 
             return Ok(volunteerProfiles);
+        }
+
+        [HttpGet("VolunteerStatisticsProfile/{id}")]
+        public async Task<IActionResult> GetVolunteerStatisticsProfile(Guid id)
+        {
+            var volunteerProfile = await volunteerService.GetVolunteerStatisticsProfile(id);
+
+            if (volunteerProfile == null)
+                return NotFound();
+
+            return Ok(volunteerProfile);
         }
     }
 }
