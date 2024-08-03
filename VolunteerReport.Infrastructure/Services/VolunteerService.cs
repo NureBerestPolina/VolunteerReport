@@ -93,5 +93,21 @@ namespace VolunteerReport.Infrastructure.Services
 
             return null;
         }
+
+        public async Task<IEnumerable<CategoryCost>> GetVolunteerSpendings(Guid volunteerId)
+        {
+            var spendings = await applicationDbContext.Reports
+            .Where(r => r.VolunteerId == volunteerId && !r.IsDeleted)
+            .SelectMany(r => r.ReportDetails)
+            .GroupBy(rd => rd.Category.Name)
+            .Select(g => new CategoryCost
+            {
+                CategoryName = g.Key,
+                CostUsd = g.Sum(rd => rd.CostUsd)
+            })
+            .ToListAsync();
+
+            return spendings;
+        }
     }
 }
