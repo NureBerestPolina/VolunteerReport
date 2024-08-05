@@ -40,6 +40,7 @@ builder.Services.AddSingleton(jwtSettings);
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IVolunteerService, VolunteerService>();
+builder.Services.AddScoped<IAccusationService, AccusationService>();
 builder.Services.AddSingleton<IJwtTokenService, JwtTokenService>();
 builder.Services.AddSingleton<IGoogleJwtTokenParser, GoogleJwtTokenParser>();
 builder.Services.AddScoped<IRoleStrategyFactory, RoleStrategyFactory>();
@@ -175,6 +176,7 @@ static IEdmModel GetEdmModel()
 
     builder.EntitySet<User>("Users").EntityType.Count().Filter().Expand().Select();
     builder.EntitySet<Volunteer>("Volunteers").EntityType.Count().Filter().Expand().Select();
+    builder.EntitySet<Volunteer>("Accusations").EntityType.Count().Filter().Expand().Select();
 
     builder.EnableLowerCamelCase();
     return builder.GetEdmModel();
