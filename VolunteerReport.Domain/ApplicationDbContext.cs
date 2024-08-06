@@ -21,7 +21,39 @@ namespace VolunteerReport.Domain
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<User>().HasIndex(c => c.Email).IsUnique();
+
+            modelBuilder.Entity<User>(entity =>
+            {
+
+                entity.HasIndex(c => c.Email).IsUnique();
+
+                entity.HasOne<Volunteer>()
+                  .WithOne(v => v.User)
+                  .OnDelete(DeleteBehavior.NoAction);
+
+                entity.HasMany<Accusation>()
+                      .WithOne(a => a.User)
+                      .HasForeignKey(a => a.UserId)
+                      .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            modelBuilder.Entity<Volunteer>(entity =>
+            {
+
+            });
+
+            modelBuilder.Entity<Accusation>(entity =>
+            {
+                entity.HasOne(a => a.User)
+                      .WithMany()
+                      .HasForeignKey(a => a.UserId)
+                      .OnDelete(DeleteBehavior.NoAction); 
+
+                entity.HasOne(a => a.Volunteer)
+                      .WithMany()
+                      .HasForeignKey(a => a.VolunteerId)
+                      .OnDelete(DeleteBehavior.NoAction); 
+            });
         }
     }
 }

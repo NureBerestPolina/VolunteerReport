@@ -10,5 +10,6 @@ namespace VolunteerReport.Infrastructure.Services.Interfaces
     public interface IAccusationService
     {
         Task<bool> IsAccusationAllowed(Guid userId);
+        Task Accuse(Guid volunteerId);
     }
 }
