@@ -177,6 +177,8 @@ static IEdmModel GetEdmModel()
     builder.EntitySet<User>("Users").EntityType.Count().Filter().Expand().Select();
     builder.EntitySet<Volunteer>("Volunteers").EntityType.Count().Filter().Expand().Select();
     builder.EntitySet<Accusation>("Accusations").EntityType.Count().Filter().Expand().Select();
+    builder.EntitySet<Report>("Reports").EntityType.Count().Filter().Expand().Select();
+    builder.EntitySet<ReportCategory>("Categories").EntityType.Count().Filter().Expand().Select();
 
     builder.EnableLowerCamelCase();
     return builder.GetEdmModel();
