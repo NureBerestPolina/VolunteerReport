@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using VolunteerReport.Domain;
 using VolunteerReport.Domain.Models;
 using VolunteerReport.Infrastructure.Services;
@@ -11,10 +12,12 @@ namespace VolunteerReport.API.Controllers
 {
     public class VolunteersController : ODataControllerBase<Volunteer>
     {
+        private readonly ApplicationDbContext appDbContext;
         private readonly IVolunteerService volunteerService;
 
         public VolunteersController(ApplicationDbContext appDbContext, IVolunteerService volunteerService) : base(appDbContext)
         {
+            this.appDbContext = appDbContext;
             this.volunteerService = volunteerService;
         }
 
@@ -43,6 +46,19 @@ namespace VolunteerReport.API.Controllers
         {
             var spendings = await volunteerService.GetVolunteerSpendings(id);
             return Ok(spendings);
+        }
+
+        [HttpPut("Block/{id}")]
+        public async Task<IActionResult> BlockVolunteer(Guid id)
+        {
+            if (appDbContext.Volunteers.Any(v => v.Id == id))
+            {
+                await volunteerService.BlockVolunteer(id);
+                return Ok();
+            }
+            else {
+                return BadRequest();
+            }
         }
     }
 }

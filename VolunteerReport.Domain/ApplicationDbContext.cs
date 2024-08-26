@@ -17,6 +17,7 @@ namespace VolunteerReport.Domain
         public DbSet<ReportDetail> ReportDetails { get; set; }
         public DbSet<Accusation> Accusations { get; set; }
         public DbSet<IssuedToken> IssuedTokens { get; set; }
+        public DbSet<BlockedVolunteer> BlockedVolunteers { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

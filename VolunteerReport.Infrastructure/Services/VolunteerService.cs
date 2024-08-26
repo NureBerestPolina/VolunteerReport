@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VolunteerReport.Domain;
+using VolunteerReport.Domain.Models;
 using VolunteerReport.Infrastructure.Dtos;
 using VolunteerReport.Infrastructure.Services.Interfaces;
 
@@ -21,7 +22,7 @@ namespace VolunteerReport.Infrastructure.Services
 
         public async Task<IEnumerable<VolunteerProfile>> GetVolunteerProfiles()
         {
-            var volunteers = await applicationDbContext.Volunteers.Where(v => !v.isBlocked && !v.isHidden).Include(v => v.User).ToListAsync();
+            var volunteers = await applicationDbContext.Volunteers.Where(v => !v.isBlocked).Include(v => v.User).ToListAsync();
 
             var volunteerProfiles = new List<VolunteerProfile>();
 
@@ -108,6 +109,25 @@ namespace VolunteerReport.Infrastructure.Services
             .ToListAsync();
 
             return spendings;
+        }
+
+        public async Task BlockVolunteer(Guid id)
+        {
+            var volunteer = await applicationDbContext.Volunteers.Include(v => v.User)
+                .FirstOrDefaultAsync(v => v.Id == id);
+
+            if (volunteer is not null)
+            { 
+                volunteer.isBlocked = true;
+                applicationDbContext.BlockedVolunteers.Add(new BlockedVolunteer
+                {
+                    Email = volunteer.User.Email,
+                    UserId = volunteer.UserId,
+                    VolunteerId = volunteer.Id,
+                });
+
+                await applicationDbContext.SaveChangesAsync();
+            }
         }
     }
 }
