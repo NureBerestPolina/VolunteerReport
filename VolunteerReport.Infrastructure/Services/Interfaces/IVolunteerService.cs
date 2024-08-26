@@ -16,5 +16,6 @@ namespace VolunteerReport.Infrastructure.Services.Interfaces
         Task<VolunteerStatisticsProfile?> GetVolunteerStatisticsProfile(Guid volunteerId);
         Task<IEnumerable<CategoryCost>> GetVolunteerSpendings(Guid volunteerId);
         Task BlockVolunteer(Guid id);
+        Task UnblockVolunteer(Guid id);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -125,6 +126,21 @@ namespace VolunteerReport.Infrastructure.Services
                     UserId = volunteer.UserId,
                     VolunteerId = volunteer.Id,
                 });
+
+                await applicationDbContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task UnblockVolunteer(Guid id)
+        {
+            var volunteer = await applicationDbContext.Volunteers.Include(v => v.User)
+                .FirstOrDefaultAsync(v => v.Id == id);
+            var blockedVolunteerRecord = await applicationDbContext.BlockedVolunteers.FirstOrDefaultAsync(v => v.VolunteerId == id);
+
+            if (volunteer is not null)
+            {
+                volunteer.isBlocked = false;
+                applicationDbContext.BlockedVolunteers.Remove(blockedVolunteerRecord);
 
                 await applicationDbContext.SaveChangesAsync();
             }

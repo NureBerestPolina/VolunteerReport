@@ -60,5 +60,20 @@ namespace VolunteerReport.API.Controllers
                 return BadRequest();
             }
         }
+
+        [AllowAnonymous]
+        [HttpPut("Unblock/{id}")]
+        public async Task<IActionResult> UnblockVolunteer(Guid id)
+        {
+            if (appDbContext.BlockedVolunteers.Any(v => v.VolunteerId == id))
+            {
+                await volunteerService.UnblockVolunteer(id);
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
     }
 }
