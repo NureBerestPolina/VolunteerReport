@@ -85,6 +85,39 @@ namespace EnRoute.API.Controllers
         }
 
         [HttpPost]
+        [Route("login/volunteer")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> LoginVolunteer([FromBody] LoginRequest request)
+        {
+            var claims = await jwtTokenParser.GetPayloadFromToken(request.googleOAuthJwt);
+
+            var name = claims.Name;
+            var email = claims.Email;
+            var photoUrl = claims.Picture;
+
+            var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+            if (user is null)
+            {
+                var registerCommand = new RegisterCommand
+                {
+                    Email = email,
+                    Name = name,
+                    AvatarUrl = photoUrl,
+                    Role = UserRoles.Volunteer
+                };
+                user = await authService.RegisterUserAsync(registerCommand);
+            }
+
+            var (token, refreshToken) = await authService.GenerateTokenForUserAsync(user);
+
+            var response = new LoginResponse(token, refreshToken);
+            return Ok(response);
+        }
+
+
+        [HttpPost]
         [Route("refresh-token")]
         public async Task<IActionResult> RefreshToken(RefreshTokenRequest refreshTokenRequest)
         {
