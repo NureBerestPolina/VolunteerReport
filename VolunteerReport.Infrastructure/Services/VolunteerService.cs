@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VolunteerReport.Domain;
 using VolunteerReport.Domain.Models;
+using VolunteerReport.Infrastructure.Commands;
 using VolunteerReport.Infrastructure.Dtos;
 using VolunteerReport.Infrastructure.Services.Interfaces;
 
@@ -141,6 +142,21 @@ namespace VolunteerReport.Infrastructure.Services
             {
                 volunteer.isBlocked = false;
                 applicationDbContext.BlockedVolunteers.Remove(blockedVolunteerRecord);
+
+                await applicationDbContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task FillInProfile(FillInProfileCommand command)
+        {
+            var volunteer = await applicationDbContext.Volunteers.FirstOrDefaultAsync(v => v.Id == command.VolunteerId);
+
+            if (volunteer is not null)
+            {
+                volunteer.Nickname = command.Nickname;
+                volunteer.BankLink = command.BankLink;
+                volunteer.HelpInfo = command.HelpInfo;
+                volunteer.ShortInfo = command.ShortInfo;
 
                 await applicationDbContext.SaveChangesAsync();
             }

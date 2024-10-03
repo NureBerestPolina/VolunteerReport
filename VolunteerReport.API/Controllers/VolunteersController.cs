@@ -1,10 +1,15 @@
 ﻿using AutoMapper;
+using Azure.Core;
+using EnRoute.Infrastructure.Commands;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.EntityFrameworkCore;
+using VolunteerReport.API.Contracts.Auth.Requests;
 using VolunteerReport.Domain;
 using VolunteerReport.Domain.Models;
+using VolunteerReport.Infrastructure.Commands;
 using VolunteerReport.Infrastructure.Services;
 using VolunteerReport.Infrastructure.Services.Interfaces;
 
@@ -14,11 +19,15 @@ namespace VolunteerReport.API.Controllers
     {
         private readonly ApplicationDbContext appDbContext;
         private readonly IVolunteerService volunteerService;
+        private readonly IMapper mapper;
 
-        public VolunteersController(ApplicationDbContext appDbContext, IVolunteerService volunteerService) : base(appDbContext)
+        public VolunteersController(ApplicationDbContext appDbContext, 
+            IVolunteerService volunteerService,
+             IMapper mapper) : base(appDbContext)
         {
             this.appDbContext = appDbContext;
             this.volunteerService = volunteerService;
+            this.mapper = mapper;
         }
 
         [HttpGet("VolunteerProfiles")]
@@ -57,6 +66,25 @@ namespace VolunteerReport.API.Controllers
                 return Ok();
             }
             else {
+                return BadRequest();
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPut("FillVolunteerProfile")]
+        public async Task<IActionResult> FillInVolunteerProfile([FromBody] FillInProfileRequest profile)
+        {
+            var volunteer = await appDbContext.Volunteers.FirstOrDefaultAsync(v => v.UserId == profile.UserId);
+            if (volunteer is not null)
+            {
+                var command = mapper.Map<FillInProfileCommand>(profile);
+                command.VolunteerId = volunteer.Id;
+
+                await volunteerService.FillInProfile(command);
+                return Ok();
+            }
+            else
+            {
                 return BadRequest();
             }
         }
