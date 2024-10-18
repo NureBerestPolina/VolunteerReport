@@ -10,7 +10,7 @@ using VolunteerReport.Domain.Utils;
 
 namespace VolunteerReport.API.Controllers
 {
-    [Authorize]
+    [AllowAnonymous]
     public class ODataControllerBase<T> : ODataController where T : class, IODataEntity
     {
         protected readonly ApplicationDbContext AppDbContext;
