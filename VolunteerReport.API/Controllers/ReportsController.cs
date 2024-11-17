@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using VolunteerReport.API.Contracts.Reports.Requests;
 using VolunteerReport.Domain;
 using VolunteerReport.Domain.Models;
 using VolunteerReport.Infrastructure.Services;
@@ -11,10 +13,12 @@ namespace VolunteerReport.API.Controllers
 {
     public class ReportsController : ODataControllerBase<Report>
     {
+        private readonly ApplicationDbContext appDbContext;
         private readonly IWebHostEnvironment _env;
 
         public ReportsController(ApplicationDbContext appDbContext, IWebHostEnvironment env) : base(appDbContext)
         {
+            this.appDbContext = appDbContext;
             _env = env;
         }
 
@@ -49,6 +53,30 @@ namespace VolunteerReport.API.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
             }
+        }
+
+        [HttpPost("Reports/MakeReport")]
+        public async Task<IActionResult> MakeReport([FromBody] MakeReportRequest request)
+        {
+            var volunteer = await appDbContext.Volunteers.FirstOrDefaultAsync(v => v.UserId == request.UserId);
+
+            if (volunteer != null)
+            {
+                var newReport = new Report
+                {
+                    Description = request.Description,
+                    Direction = request.Direction,
+                    VolunteerId = volunteer.Id,
+                    PhotoUrl = request.PhotoUrl,
+                };
+
+                await appDbContext.Reports.AddAsync(newReport);
+                await appDbContext.SaveChangesAsync();
+
+                return Ok(new { Id = newReport.Id });
+            }
+
+            return NotFound();
         }
     }
 }
