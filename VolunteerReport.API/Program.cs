@@ -44,7 +44,7 @@ builder.Services.AddScoped<IAccusationService, AccusationService>();
 builder.Services.AddSingleton<IJwtTokenService, JwtTokenService>();
 builder.Services.AddSingleton<IGoogleJwtTokenParser, GoogleJwtTokenParser>();
 builder.Services.AddScoped<IRoleStrategyFactory, RoleStrategyFactory>();
-
+builder.Services.AddSingleton<IPhotoPlagiarismService, PhotoPlagiarizmService>();
 
 builder.Services.AddHttpClient();
 

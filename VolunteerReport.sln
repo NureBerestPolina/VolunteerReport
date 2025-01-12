@@ -3,13 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33414.496
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VolunteerReport.API", "VolunteerReport.API\VolunteerReport.API.csproj", "{A1581EFD-CECE-4835-8AA0-D5E6F1C66650}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VolunteerReport.API", "VolunteerReport.API\VolunteerReport.API.csproj", "{A1581EFD-CECE-4835-8AA0-D5E6F1C66650}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VolunteerReport.Domain", "VolunteerReport.Domain\VolunteerReport.Domain.csproj", "{535E040C-960F-4676-8BB7-47DFE5862763}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VolunteerReport.Domain", "VolunteerReport.Domain\VolunteerReport.Domain.csproj", "{535E040C-960F-4676-8BB7-47DFE5862763}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VolunteerReport.Common", "VolunteerReport.Common\VolunteerReport.Common.csproj", "{EAF90DF7-BD75-4464-A724-65BD843EA25C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VolunteerReport.Common", "VolunteerReport.Common\VolunteerReport.Common.csproj", "{EAF90DF7-BD75-4464-A724-65BD843EA25C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VolunteerReport.Infrastructure", "VolunteerReport.Infrastructure\VolunteerReport.Infrastructure.csproj", "{D6ED4078-CE1B-4435-93E5-934AE12A6ED5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VolunteerReport.Infrastructure", "VolunteerReport.Infrastructure\VolunteerReport.Infrastructure.csproj", "{D6ED4078-CE1B-4435-93E5-934AE12A6ED5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D29E07AB-86FE-4E79-AE0A-8A885E492A46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VolunteerReport.Infrastructure.Tests", "VolunteerReport.Infrastructure.Tests\VolunteerReport.Infrastructure.Tests.csproj", "{A9D4DB84-1DDA-45BE-8AB2-103DC4989B55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,9 +37,16 @@ Global
 		{D6ED4078-CE1B-4435-93E5-934AE12A6ED5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6ED4078-CE1B-4435-93E5-934AE12A6ED5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6ED4078-CE1B-4435-93E5-934AE12A6ED5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9D4DB84-1DDA-45BE-8AB2-103DC4989B55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9D4DB84-1DDA-45BE-8AB2-103DC4989B55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9D4DB84-1DDA-45BE-8AB2-103DC4989B55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9D4DB84-1DDA-45BE-8AB2-103DC4989B55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A9D4DB84-1DDA-45BE-8AB2-103DC4989B55} = {D29E07AB-86FE-4E79-AE0A-8A885E492A46}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C96D0216-311F-40A2-9DAD-DE71D786DC27}
