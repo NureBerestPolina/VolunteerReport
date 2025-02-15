@@ -42,7 +42,8 @@ namespace VolunteerReport.API.Controllers
 
             try
             {
-                string uploadsFolder = Path.Combine(_env.ContentRootPath, "report_photos");
+                //string uploadsFolder = Path.Combine(_env.ContentRootPath, "report_photos");
+                string uploadsFolder = "http://localhost:5105/report_photos/";
 
                 if (!Directory.Exists(uploadsFolder))
                 {

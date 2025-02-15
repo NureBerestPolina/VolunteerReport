@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using EnRoute.Infrastructure.Strategies;
 using VolunteerReport.Domain.Models;
 using VolunteerReport.Infrastructure.Services;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -147,6 +148,15 @@ builder.Services.AddSwaggerGen(c =>
 //builder.Services.AddHostedService<AdminInitializerHostedService>();
 
 var app = builder.Build();
+
+// Разрешаем раздачу статических файлов из папки "report_photos"
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "report_photos")),
+    RequestPath = "/report_photos"
+});
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
