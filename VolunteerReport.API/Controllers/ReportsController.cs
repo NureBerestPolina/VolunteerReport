@@ -42,13 +42,8 @@ namespace VolunteerReport.API.Controllers
 
             try
             {
-                //string uploadsFolder = Path.Combine(_env.ContentRootPath, "report_photos");
-                string uploadsFolder = "http://localhost:5105/report_photos/";
-
-                if (!Directory.Exists(uploadsFolder))
-                {
-                    Directory.CreateDirectory(uploadsFolder);
-                }
+                string uploadsFolder = Path.Combine(_env.ContentRootPath, "report_photos");
+                string uploadsFolderToStoreInDb = "http://localhost:5105/report_photos/";
 
                 string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
@@ -57,6 +52,8 @@ namespace VolunteerReport.API.Controllers
                 {
                     await file.CopyToAsync(fileStream);
                 }
+
+                filePath = Path.Combine(uploadsFolderToStoreInDb, uniqueFileName);
 
                 return Ok(new { url = filePath.Replace(@"\\", "/") });
             }
